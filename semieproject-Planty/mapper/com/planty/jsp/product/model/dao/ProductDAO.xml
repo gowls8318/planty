@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductDAO">
+	
+	<resultMap type="com.planty.jsp.product.model.dao.ProductDAO" id="selectAllProductList">
+		<id property="proNo" column="PRO_NO"/>
+		<result property="cateNo" column="CATE_NO"/>
+		<result property="id" column="ID"/>
+		<result property="proName" column="PRO_NAME"/>
+		<result property="proPrice" column="PRO_PRICE"/>
+		<result property="imgList" column="PRO_CONTENT"/>
+		
+		<association property="writer" resultMap="memberResultMap"/>
+		<association property="category" resultMap="categoryResultMap"/>
+	</resultMap>
+
+
+
+
+	<insert id="insertProductContent" >
+	        INSERT /* com.planty.jsp.product.model.dao.ProductDAO#insertProductContent() */
+	          INTO PRODUCT 
+	        (
+	          PRO_NO
+	        , CATE_NO
+	        , ID	        
+	        , PRO_NAME
+	        , PRO_PRICE
+	        )
+	        VALUES 
+	        (
+	          SEQ_PRO_NO.NEXTVAL
+	        , #{ cateNo }
+	        , #{ id }
+	        , #{ proName }
+	        , #{ proPrice }
+	        )
+		</insert>
+
+			
+		
+		<insert id="insertProductImg">
+		
+	        <selectKey keyProperty="proNo" resultType="Integer" order="BEFORE">
+	        	SELECT
+	        	       SEQ_PRO_NO.CURRVAL
+	        	  FROM DUAL
+	        </selectKey>
+        INSERT /* com.planty.jsp.product.model.dao.ProductDAO#insertAttachment() */
+          INTO PRO_IMG
+        (
+          IMG_NO
+        , PRO_NO
+        , P_PATH
+        , FILE_NAME
+        , SER_FILE
+        <if test="thumFile != null">
+        , THUM_FILE
+        </if>
+        )
+        VALUES 
+        (
+          SEQ_P_IMG_NO.NEXTVAL
+        , #{ proNo }
+        , #{ proPath }
+        , #{ fileName }
+        , #{ serFile }
+        <if test="thumFile != null">
+        , #{ thumFile }
+        </if>
+        )
+	</insert>
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+</mapper>
